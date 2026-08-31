@@ -1,4 +1,6 @@
-use {std::{ffi::CString, str::FromStr as _}, winapi::um::winuser::MessageBoxA};
+use std::{ffi::CString, str::FromStr as _};
+use windows::Win32::UI::WindowsAndMessaging::{MessageBoxA, MB_OK};
+use windows_core::{PCSTR, s};
 
 #[cfg(debug_assertions)]
 use {
@@ -56,10 +58,10 @@ pub fn setup_panic_handler() {
 
         unsafe {
             MessageBoxA(
-                std::ptr::null_mut(),
-                format!("Panic occurred at {}: {}\0", location, message).as_ptr() as *const i8,
-                "Panic\0".as_ptr() as *const i8,
-                0,
+                None,
+                PCSTR(format!("Panic occurred at {}: {}\0", location, message).as_ptr()),
+                s!("Panic"),
+                MB_OK
             );
         }
 
@@ -78,10 +80,10 @@ pub fn message_box(message: &str) {
 
     unsafe {
         MessageBoxA(
-            std::ptr::null_mut(),
-            message.as_ptr() as *const i8,
-            "ColdLoader\0".as_ptr() as *const i8,
-            0,
+            None,
+            PCSTR(message.as_ptr() as _),
+            s!("ColdLoader"),
+            MB_OK,
         );
     }
 }
